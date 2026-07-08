@@ -1,0 +1,6 @@
+[submodule "godot-cpp"]
+	path = godot-cpp
+	url = https://github.com/godotengine/godot-cpp.git
+[submodule "extern/Godot-xxHash"]
+	path = extern/Godot-xxHash
+	url = https://github.com/heathen-engineering/Godot-xxHash.git

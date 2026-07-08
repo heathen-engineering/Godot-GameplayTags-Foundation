@@ -18,3 +18,7 @@ mono_crash.*.json
 
 # CMake build directory
 addons/FoundationGameplayTags/build/
+
+# Compiled GDExtension binaries — never committed. CI builds and packages these;
+# for local dev, build from source (see README) or grab a Release zip.
+addons/FoundationGameplayTags/bin/
