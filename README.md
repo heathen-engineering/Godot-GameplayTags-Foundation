@@ -63,7 +63,18 @@ Tags follow a dot-separated hierarchy. Registering `"Effects.Buff.Strength"` aut
 
 Copy `addons/FoundationGameplayTags/` into your project's `addons/` folder. Enable the plugin from **Project Settings → Plugins**.
 
-Author your project's default tags in a `GameplayTagsList` resource (`tags: PackedStringArray`), then add `FoundationAutoload.tscn` as an AutoLoad and assign your list(s) to its `tag_lists` export — they're registered on `_ready()`, before any other autoload can query the registry.
+Author your project's default tags in a `GameplayTagsList` resource — either inline (`tags: PackedStringArray`) or loaded from one or more `.gptags` JSON files (`gptags_paths: PackedStringArray`) — then add `FoundationAutoload.tscn` as an AutoLoad and assign your list(s) to its `tag_lists` export — they're registered on `_ready()`, before any other autoload can query the registry.
+
+### `.gptags` file format
+
+```json
+{
+  "registered": true,
+  "tags": [ "Shop.Inventory.Money", "Shop.Basket.Total" ]
+}
+```
+
+Same JSON schema as Unity-GameplayTags-Foundation's `.gptags` runtime tag source — a tag list authored for one engine is a plain copy-paste for the other. `tags` lists only the authored dot-paths; parent segments are implied, not required. `registered` defaults to `false` if omitted (Unity's convention for inert/draft tag sets, e.g. unvetted UGC/mod content) — set it `true` for tags you actually want registered.
 
 ## Build
 
@@ -247,6 +258,13 @@ active.subscribe(registry.hash("Effects.Buff"), func(tag, prev, next):
 | `add_condition(condition)` / `clear_conditions()` | Mutate the condition list |
 
 ---
+
+## Editor tooling
+
+Enable the plugin (Project Settings > Plugins) to get:
+- **Tag-picker Inspector field** — any `tag_name`/`*_tag_name` `String` property (including `GameplayTagCondition`/`GameplayTagOperation`'s own fields) gets a searchable Tree popup instead of a raw text field, built from every `.gptags` file in the project plus whatever `GameplayTagRegistry` already knows about. `GameplayTagPickerProperty` (`editor/GameplayTagPickerProperty.gd`) is reusable by other addons directly — no compile-time dependency needed, it's a plain global `class_name`.
+- **Compact `GameplayTagCondition`/`GameplayTagOperation` editors** — one row (tag picker + comparison/arithmetic dropdown + value + exact-match toggle) instead of Godot's default multi-line block, since these are commonly embedded several-to-a-list (e.g. Ogham options).
+- **"GameplayTags" bottom-panel dock** — tag tree CRUD over every `.gptags` file in the project (add/rename/delete, registered/unregistered toggle) — the closest Godot analog to Unity's `Project Settings > Subsystems > Gameplay Tags` page (Godot has no nested-tab Project Settings equivalent; bottom panels are the native idiom instead).
 
 ## Not yet ported
 
