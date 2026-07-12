@@ -4,3 +4,6 @@
 [submodule "extern/Godot-xxHash"]
 	path = extern/Godot-xxHash
 	url = https://github.com/heathen-engineering/Godot-xxHash.git
+[submodule "extern/Game-Framework"]
+	path = extern/Game-Framework
+	url = https://github.com/heathen-engineering/Game-Framework.git

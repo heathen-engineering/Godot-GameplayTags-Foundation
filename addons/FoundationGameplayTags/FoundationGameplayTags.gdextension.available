@@ -1,0 +1,71 @@
+[configuration]
+entry_symbol = "foundation_gameplaytags_init"
+compatibility_minimum = 4.6
+
+[libraries]
+
+windows.debug.x86_64   = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.windows.debug.x86_64.dll"
+windows.release.x86_64 = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.windows.release.x86_64.dll"
+
+linux.debug.x86_64   = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.linux.debug.x86_64.so"
+linux.release.x86_64 = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.linux.release.x86_64.so"
+
+macos.debug.x86_64   = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.macos.debug.x86_64.dylib"
+macos.release.x86_64 = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.macos.release.x86_64.dylib"
+
+android.debug.arm64    = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.android.debug.arm64.so"
+android.release.arm64  = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.android.release.arm64.so"
+android.debug.arm32    = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.android.debug.arm32.so"
+android.release.arm32  = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.android.release.arm32.so"
+android.debug.x86_64   = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.android.debug.x86_64.so"
+android.release.x86_64 = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.android.release.x86_64.so"
+
+; iOS GDExtensions must be statically linked, not dynamically loaded — see
+; Godot-Game-Framework's .gdextension for the full rationale. Device-only
+; (arm64) cross-compile, not yet wired into an actual iOS export.
+ios.debug.arm64   = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.ios.debug.arm64.a"
+ios.release.arm64 = "res://addons/FoundationGameplayTags/bin/libFoundationGameplayTags.ios.release.arm64.a"
+
+; GameplayTagsSubsystem (a real gameframework::Subsystem) needs the shared
+; gameframework runtime loaded so it shares SubsystemManager::instance()
+; with FoundationGameFramework and every other gem — see that repo's
+; README, "The linking model". Declared explicitly so this doesn't depend
+; on extension load order. Not declared for iOS, which links statically.
+[dependencies]
+
+windows.debug.x86_64 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.windows.debug.x86_64.dll": ""
+}
+windows.release.x86_64 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.windows.release.x86_64.dll": ""
+}
+linux.debug.x86_64 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.linux.debug.x86_64.so": ""
+}
+linux.release.x86_64 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.linux.release.x86_64.so": ""
+}
+macos.debug.x86_64 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.macos.debug.x86_64.dylib": ""
+}
+macos.release.x86_64 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.macos.release.x86_64.dylib": ""
+}
+android.debug.arm64 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.android.debug.arm64.so": ""
+}
+android.release.arm64 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.android.release.arm64.so": ""
+}
+android.debug.arm32 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.android.debug.arm32.so": ""
+}
+android.release.arm32 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.android.release.arm32.so": ""
+}
+android.debug.x86_64 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.android.debug.x86_64.so": ""
+}
+android.release.x86_64 = {
+  "res://addons/FoundationGameFramework/bin/libgameframework.android.release.x86_64.so": ""
+}

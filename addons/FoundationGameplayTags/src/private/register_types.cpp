@@ -20,6 +20,9 @@
 #include "GameplayTagCondition.h"
 #include "GameplayTagOperation.h"
 #include "GameplayTagRegistry.h"
+#include "GameplayTagsSubsystem.h"
+
+#include <gameframework/SubsystemManager.h>
 
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/core/class_db.hpp>
@@ -40,6 +43,11 @@ void initialize_foundation_gameplaytags_module(ModuleInitializationLevel p_level
 
     gameplaytags_singleton = memnew(GameplayTagRegistry);
     Engine::get_singleton()->register_singleton("GameplayTagRegistry", GameplayTagRegistry::get_singleton());
+
+    // Real gameframework::Subsystem registration — plain C++, shared process-wide via the
+    // gameframework::shared dynamic link (see Godot-Game-Framework's README, "The linking
+    // model"). Explicit registration, not discovery: each gem knows exactly what it provides.
+    gameframework::SubsystemManager::instance().register_subsystem<GameplayTagsSubsystem>();
 }
 
 void uninitialize_foundation_gameplaytags_module(ModuleInitializationLevel p_level)
