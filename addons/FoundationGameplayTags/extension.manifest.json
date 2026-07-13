@@ -1,0 +1,22 @@
+{
+    "schema_version": 1,
+    "id": "FoundationGameplayTags",
+    "display_name": "Foundation for GameplayTags",
+    "version": "1.0.1",
+    "repository_url": "https://github.com/heathen-engineering/Godot-GameplayTags-Foundation",
+    "source": {
+        "type": "github_release",
+        "repo": "heathen-engineering/Godot-GameplayTags-Foundation"
+    },
+    "gated": true,
+    "dependencies": [
+        {
+            "id": "FoundationGameFramework",
+            "min_version": "1.0.0",
+            "source": {
+                "type": "github_release",
+                "repo": "heathen-engineering/Godot-Game-Framework"
+            }
+        }
+    ]
+}

@@ -9,10 +9,12 @@ extends EditorPlugin
 ##
 ## Gated: FoundationGameplayTags.gdextension (the native library everything
 ## here ultimately depends on — GameplayTagRegistry, the Subsystem
-## integration, all of it) ships inert until heathen_gate confirms
-## Godot-Game-Framework is actually installed. Building the dock/inspector
-## plugin below before that would be reaching for native classes that don't
-## exist yet — see gate/heathen_gate.gd for the full mechanism and why.
+## integration, all of it) ships inert until Extension Resolver confirms
+## Godot-Game-Framework is actually installed (at a satisfying version —
+## real version-guarding, not just presence, since the migration off
+## heathen_gate.gd). Building the dock/inspector plugin below before that
+## would be reaching for native classes that don't exist yet — see
+## gate/extension_resolver_gate.gd for the full mechanism and why.
 ##
 ## GameplayTagsInspectorPlugin is loaded with a runtime load(), not a static
 ## type/preload — it does "is GameplayTagCondition"/"is GameplayTagOperation"
@@ -27,12 +29,12 @@ extends EditorPlugin
 ## GameplayTagsDock has no such native-type reference of its own (checked),
 ## so it's safe to construct normally below.
 
-const HeathenGate = preload("res://addons/FoundationGameplayTags/gate/heathen_gate.gd")
+const Gate = preload("res://addons/FoundationGameplayTags/gate/extension_resolver_gate.gd")
 
 var _inspector_plugin: Object
 
 func _enter_tree() -> void:
-	if HeathenGate.ensure_unlocked(self, "FoundationGameplayTags", _activate_tooling):
+	if Gate.ensure_unlocked(self, "FoundationGameplayTags", _activate_tooling):
 		_activate_tooling()
 
 # NOT named _build() — EditorPlugin already declares a virtual _build() -> bool

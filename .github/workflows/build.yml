@@ -192,10 +192,11 @@ jobs:
           cp -r addons/FoundationGameplayTags/gate package/addons/FoundationGameplayTags/
           cp addons/FoundationGameplayTags/plugin.cfg package/addons/FoundationGameplayTags/
           # Ships inert (.gdextension.available, not .gdextension) — Godot's boot-time
-          # scan never auto-loads it; gate/heathen_gate.gd renames it to the real name
-          # once GameplayTagsEditorPlugin.gd confirms Godot-Game-Framework is present.
+          # scan never auto-loads it; gate/extension_resolver_gate.gd renames it to the
+          # real name once GameplayTagsEditorPlugin.gd confirms Godot-Game-Framework is
+          # present.
           cp addons/FoundationGameplayTags/FoundationGameplayTags.gdextension.available package/addons/FoundationGameplayTags/
-          cp addons/FoundationGameplayTags/heathen_manifest.json package/addons/FoundationGameplayTags/
+          cp addons/FoundationGameplayTags/extension.manifest.json package/addons/FoundationGameplayTags/
           cp addons/FoundationGameplayTags/FoundationAutoload.gd package/addons/FoundationGameplayTags/
           cp addons/FoundationGameplayTags/FoundationAutoload.tscn package/addons/FoundationGameplayTags/
           cp addons/FoundationGameplayTags/GameplayTagsList.gd package/addons/FoundationGameplayTags/
