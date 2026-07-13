@@ -2,8 +2,10 @@
 extends EditorPlugin
 
 ## Activates the GameplayTags editor tooling: the tag-picker/compact-condition-
-## operation inspector plugin, and the "GameplayTags" bottom-panel dock. Enable via
-## Project Settings > Plugins (this addon's plugin.cfg now points here).
+## operation inspector plugin, and the "GameplayTags" settings page — handed to
+## the unified Project Settings > Subsystems tab (Godot-Game-Framework) instead
+## of building its own bottom-panel dock. Enable via Project Settings > Plugins
+## (this addon's plugin.cfg now points here).
 ##
 ## Gated: FoundationGameplayTags.gdextension (the native library everything
 ## here ultimately depends on — GameplayTagRegistry, the Subsystem
@@ -28,7 +30,6 @@ extends EditorPlugin
 const HeathenGate = preload("res://addons/FoundationGameplayTags/gate/heathen_gate.gd")
 
 var _inspector_plugin: Object
-var _dock: GameplayTagsDock
 
 func _enter_tree() -> void:
 	if HeathenGate.ensure_unlocked(self, "FoundationGameplayTags", _activate_tooling):
@@ -42,14 +43,14 @@ func _activate_tooling() -> void:
 	_inspector_plugin = inspector_script.new()
 	add_inspector_plugin(_inspector_plugin)
 
-	_dock = GameplayTagsDock.new()
-	add_control_to_bottom_panel(_dock, "GameplayTags")
+	var bridge = Engine.get_singleton("SubsystemManagerBridge")
+	if bridge != null:
+		bridge.register_settings_panel("GameplayTags", Callable(self, "_build_settings_panel"))
+
+func _build_settings_panel() -> Control:
+	return GameplayTagsDock.new()
 
 func _exit_tree() -> void:
 	if _inspector_plugin != null:
 		remove_inspector_plugin(_inspector_plugin)
 		_inspector_plugin = null
-	if _dock != null:
-		remove_control_from_bottom_panel(_dock)
-		_dock.queue_free()
-		_dock = null
