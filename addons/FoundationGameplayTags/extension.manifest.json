@@ -2,7 +2,7 @@
     "schema_version": 1,
     "id": "FoundationGameplayTags",
     "display_name": "Foundation for GameplayTags",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "repository_url": "https://github.com/heathen-engineering/Godot-GameplayTags-Foundation",
     "source": {
         "type": "github_release",
