@@ -28,6 +28,11 @@ A hierarchical, dot-path GameplayTags implementation for Godot 4 — hashed iden
 - Godot **4.6** or compatible
 - [godot-cpp](https://github.com/godotengine/godot-cpp), checked out locally, for building from source
 - [Godot-xxHash](https://github.com/heathen-engineering/Godot-xxHash) (compiled in directly — see [Build](#build))
+- [Godot-Game-Framework](https://github.com/heathen-engineering/Godot-Game-Framework), **enabled in the
+  consuming project** — a runtime dependency, not a build-time one. If it's missing, enabling this
+  plugin walks you through fetching it automatically via
+  [Extension Resolver for Godot](https://github.com/heathen-engineering/Godot-Extension-Resolver);
+  see that project's README for how the manifest-driven resolution works.
 
 ---
 
