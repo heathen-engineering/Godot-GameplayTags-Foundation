@@ -21,6 +21,12 @@
 #include "GameplayTagOperation.h"
 #include "GameplayTagRegistry.h"
 #include "GameplayTagsSubsystem.h"
+#include "editor/GameplayTagConditionCompactEditor.h"
+#include "editor/GameplayTagOperationCompactEditor.h"
+#include "editor/GameplayTagPickerProperty.h"
+#include "editor/GameplayTagVocabulary.h"
+#include "editor/GameplayTagsDock.h"
+#include "editor/GameplayTagsInspectorPlugin.h"
 
 #include <gameframework/SubsystemManager.h>
 
@@ -33,21 +39,34 @@ static GameplayTagRegistry *gameplaytags_singleton = nullptr;
 
 void initialize_foundation_gameplaytags_module(ModuleInitializationLevel p_level)
 {
-    if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE)
-        return;
+    if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE)
+    {
+        ClassDB::register_class<GameplayTagRegistry>();
+        ClassDB::register_class<GameplayTagCondition>();
+        ClassDB::register_class<GameplayTagOperation>();
+        ClassDB::register_class<GameplayTagCollection>();
 
-    ClassDB::register_class<GameplayTagRegistry>();
-    ClassDB::register_class<GameplayTagCondition>();
-    ClassDB::register_class<GameplayTagOperation>();
-    ClassDB::register_class<GameplayTagCollection>();
+        gameplaytags_singleton = memnew(GameplayTagRegistry);
+        Engine::get_singleton()->register_singleton("GameplayTagRegistry", GameplayTagRegistry::get_singleton());
 
-    gameplaytags_singleton = memnew(GameplayTagRegistry);
-    Engine::get_singleton()->register_singleton("GameplayTagRegistry", GameplayTagRegistry::get_singleton());
-
-    // Real gameframework::Subsystem registration — plain C++, shared process-wide via the
-    // gameframework::shared dynamic link (see Godot-Game-Framework's README, "The linking
-    // model"). Explicit registration, not discovery: each gem knows exactly what it provides.
-    gameframework::SubsystemManager::instance().register_subsystem<GameplayTagsSubsystem>();
+        // Real gameframework::Subsystem registration — plain C++, shared process-wide via the
+        // gameframework::shared dynamic link (see Godot-Game-Framework's README, "The linking
+        // model"). Explicit registration, not discovery: each gem knows exactly what it provides.
+        gameframework::SubsystemManager::instance().register_subsystem<GameplayTagsSubsystem>();
+    }
+    else if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR)
+    {
+        // Editor-tools-only classes. Godot never initializes
+        // MODULE_INITIALIZATION_LEVEL_EDITOR in exported game builds, so
+        // this stays entirely out of shipped games automatically — same
+        // pattern as FoundationOgham's register_types.cpp.
+        ClassDB::register_class<GameplayTagVocabulary>();
+        ClassDB::register_class<GameplayTagPickerProperty>();
+        ClassDB::register_class<GameplayTagConditionCompactEditor>();
+        ClassDB::register_class<GameplayTagOperationCompactEditor>();
+        ClassDB::register_class<GameplayTagsInspectorPlugin>();
+        ClassDB::register_class<GameplayTagsDock>();
+    }
 }
 
 void uninitialize_foundation_gameplaytags_module(ModuleInitializationLevel p_level)

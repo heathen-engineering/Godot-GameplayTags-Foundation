@@ -16,18 +16,17 @@ extends EditorPlugin
 ## would be reaching for native classes that don't exist yet — see
 ## gate/extension_resolver_gate.gd for the full mechanism and why.
 ##
-## GameplayTagsInspectorPlugin is loaded with a runtime load(), not a static
-## type/preload — it does "is GameplayTagCondition"/"is GameplayTagOperation"
-## checks internally, and GDScript resolves type identifiers at COMPILE time
-## of whatever file references them, not at the time a function actually
-## runs. A plain "var _inspector_plugin: GameplayTagsInspectorPlugin" here
-## would force GDScript to parse that whole file (and therefore resolve
-## GameplayTagCondition/GameplayTagOperation) as soon as THIS script loads —
-## i.e. before the gate has had any chance to run at all. Confirmed the hard
-## way: "Could not find type GameplayTagCondition in the current scope",
-## cascading into "Failed to compile depended scripts" for this file too.
-## GameplayTagsDock has no such native-type reference of its own (checked),
-## so it's safe to construct normally below.
+## GameplayTagsInspectorPlugin and GameplayTagsDock are now both pure native
+## GDExtension classes (ported to C++ — no GDScript fallback left). They're
+## constructed via ClassDB.instantiate("...") with a plain String, not a bare
+## "GameplayTagsInspectorPlugin.new()"/static type reference, because GDScript
+## resolves bare type identifiers at COMPILE time of whatever file references
+## them — a static reference here would force this file to resolve those
+## native types as soon as IT loads, i.e. before the gate has had any chance
+## to run at all. Confirmed the hard way: "Could not find type
+## GameplayTagCondition in the current scope", cascading into "Failed to
+## compile depended scripts" for this file too. ClassDB.instantiate() sidesteps
+## this entirely — it's a runtime lookup by name, no parse-time dependency.
 
 const Gate = preload("res://addons/FoundationGameplayTags/gate/extension_resolver_gate.gd")
 
@@ -41,8 +40,7 @@ func _enter_tree() -> void:
 # (asks whether a custom pre-run build step should block "Run Project"); naming
 # this the same collided with it and broke script parsing entirely.
 func _activate_tooling() -> void:
-	var inspector_script: GDScript = load("res://addons/FoundationGameplayTags/editor/GameplayTagsInspectorPlugin.gd")
-	_inspector_plugin = inspector_script.new()
+	_inspector_plugin = ClassDB.instantiate("GameplayTagsInspectorPlugin")
 	add_inspector_plugin(_inspector_plugin)
 
 	var bridge = Engine.get_singleton("SubsystemManagerBridge")
@@ -50,7 +48,7 @@ func _activate_tooling() -> void:
 		bridge.register_settings_panel("GameplayTags", Callable(self, "_build_settings_panel"))
 
 func _build_settings_panel() -> Control:
-	return GameplayTagsDock.new()
+	return ClassDB.instantiate("GameplayTagsDock")
 
 func _exit_tree() -> void:
 	if _inspector_plugin != null:
