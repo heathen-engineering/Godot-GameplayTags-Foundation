@@ -2,13 +2,13 @@
     "schema_version": 2,
     "id": "FoundationGameplayTags",
     "display_name": "Foundation for GameplayTags",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "repository_url": "https://github.com/heathen-engineering/Godot-GameplayTags-Foundation",
-    "documentation_url": "https://github.com/heathen-engineering/Godot-GameplayTags-Foundation#readme",
-    "support_url": "https://github.com/heathen-engineering/Godot-GameplayTags-Foundation/issues",
+    "documentation_url": "https://heathen.group/kb/gameplaytags-welcome/",
+    "support_url": "https://discord.gg/xmtRNkW7hW",
     "license_url": "https://github.com/heathen-engineering/Godot-GameplayTags-Foundation/blob/main/LICENSE",
     "publisher": {
-        "name": "Heathen Engineering Limited",
+        "name": "Heathen Group",
         "url": "https://heathen.group"
     },
     "description": "Hierarchical dot-path GameplayTags for Godot — a hashed tag registry, condition/operation rules engine, and compact inspector editors. Ported from Unity-GameplayTags-Foundation.",
