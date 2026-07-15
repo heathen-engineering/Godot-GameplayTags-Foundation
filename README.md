@@ -4,7 +4,7 @@
 ![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green?style=flat-square)
 ![Godot](https://img.shields.io/badge/Godot-4.6%20%2B-%23478CBF?style=flat-square&logo=godotengine&logoColor=white)
 
-A hierarchical, dot-path GameplayTags implementation for Godot 4 — hashed identifiers with zero runtime string cost once registered, plus a full conditional rules engine (`GameplayTagCondition`/`GameplayTagOperation`) for driving gameplay and narrative logic.
+A hierarchical, dot-path GameplayTags implementation for Godot 4. Hashed identifiers give zero runtime string cost once registered, plus a full conditional rules engine (`GameplayTagCondition`/`GameplayTagOperation`) for driving gameplay and narrative logic.
 
 - **License:** Apache 2.0
 - **Origin:** Heathen Group
@@ -12,7 +12,7 @@ A hierarchical, dot-path GameplayTags implementation for Godot 4 — hashed iden
 
 > [!TIP]
 > **Looking for the easiest way to install?**
-> Copy `addons/FoundationGameplayTags/` straight into your project's `addons/` folder — there's no external package manager step. See [Install](#install) below.
+> Copy `addons/FoundationGameplayTags/` straight into your project's `addons/` folder. There's no external package manager step. See [Install](#install) below.
 
 ---
 
@@ -27,12 +27,18 @@ A hierarchical, dot-path GameplayTags implementation for Godot 4 — hashed iden
 
 - Godot **4.6** or compatible
 - [godot-cpp](https://github.com/godotengine/godot-cpp), checked out locally, for building from source
-- [Godot-xxHash](https://github.com/heathen-engineering/Godot-xxHash) (compiled in directly — see [Build](#build))
+- [Godot-xxHash](https://github.com/heathen-engineering/Godot-xxHash) (compiled in directly, see [Build](#build))
 - [Godot-Game-Framework](https://github.com/heathen-engineering/Godot-Game-Framework), **enabled in the
-  consuming project** — a runtime dependency, not a build-time one. If it's missing, enabling this
+  consuming project**. This is a runtime dependency, not a build-time one. If it's missing, enabling this
   plugin walks you through fetching it automatically via
   [Extension Resolver for Godot](https://github.com/heathen-engineering/Godot-Extension-Resolver);
   see that project's README for how the manifest-driven resolution works.
+
+---
+
+## Support
+
+For general questions, help, and troubleshooting, join our [Discord](https://discord.gg/xmtRNkW7hW). Thousands of developers are there and can often help faster than waiting on a maintainer. Please use [GitHub Issues](https://github.com/heathen-engineering/Godot-GameplayTags-Foundation/issues) for a confirmed bug or a feature request that needs tracking, not general support questions.
 
 ---
 
@@ -56,11 +62,11 @@ GameplayTags Foundation gives you a structured, hierarchy-aware tag system built
 | `GameplayTagRegistry` | Engine singleton tracking every registered tag and its hierarchy |
 | `GameplayTagCollection` | A `RefCounted` container of tags with numeric stack values and set operations |
 | `GameplayTagCondition` | A `Resource` predicate that tests a tag's presence or value in a collection |
-| `GameplayTagOperation` | A `Resource` state mutation — applies arithmetic to a tag's value, guarded by conditions |
+| `GameplayTagOperation` | A `Resource` state mutation that applies arithmetic to a tag's value, guarded by conditions |
 
-Tags follow a dot-separated hierarchy. Registering `"Effects.Buff.Strength"` automatically makes it a descendant of both `"Effects.Buff"` and `"Effects"`. Hierarchy is stored as parent links compiled to **interval (nested-set) encoding** — so `is_descendant_of` is an O(1) range comparison, not a hash-set lookup. This is the algorithm [Unity-GameplayTags-Foundation](https://github.com/heathen-engineering/Unity-GameplayTags-Foundation) uses, ported here in place of the descendant-hash-set approach the earlier [O3DE port](https://github.com/heathen-engineering/O3DE-Foundation-for-GameplayTags) shipped with.
+Tags follow a dot-separated hierarchy. Registering `"Effects.Buff.Strength"` automatically makes it a descendant of both `"Effects.Buff"` and `"Effects"`. Hierarchy is stored as parent links compiled to **interval (nested-set) encoding**, so `is_descendant_of` is an O(1) range comparison, not a hash-set lookup. This is the algorithm [Unity-GameplayTags-Foundation](https://github.com/heathen-engineering/Unity-GameplayTags-Foundation) uses, ported here in place of the descendant-hash-set approach the earlier [O3DE port](https://github.com/heathen-engineering/O3DE-Foundation-for-GameplayTags) shipped with.
 
-`GameplayTagCondition` and `GameplayTagOperation` are `Resource`-derived (not just script-side value types) specifically so they can be authored **inline on Ogham Storyteller graph nodes** and edited in the Inspector — this is a core dependency for [Godot-Ogham-Storyteller-Foundation](https://github.com/heathen-engineering/Godot-Ogham-Storyteller-Foundation).
+`GameplayTagCondition` and `GameplayTagOperation` are `Resource`-derived (not just script-side value types) specifically so they can be authored **inline on Ogham Storyteller graph nodes** and edited in the Inspector. This is a core dependency for [Godot-Ogham-Storyteller-Foundation](https://github.com/heathen-engineering/Godot-Ogham-Storyteller-Foundation).
 
 ---
 
@@ -68,7 +74,7 @@ Tags follow a dot-separated hierarchy. Registering `"Effects.Buff.Strength"` aut
 
 Copy `addons/FoundationGameplayTags/` into your project's `addons/` folder. Enable the plugin from **Project Settings → Plugins**.
 
-Author your project's default tags in a `GameplayTagsList` resource — either inline (`tags: PackedStringArray`) or loaded from one or more `.gptags` JSON files (`gptags_paths: PackedStringArray`) — then add `FoundationAutoload.tscn` as an AutoLoad and assign your list(s) to its `tag_lists` export — they're registered on `_ready()`, before any other autoload can query the registry.
+Author your project's default tags in a `GameplayTagsList` resource, either inline (`tags: PackedStringArray`) or loaded from one or more `.gptags` JSON files (`gptags_paths: PackedStringArray`). Then add `FoundationAutoload.tscn` as an AutoLoad and assign your list(s) to its `tag_lists` export. They're registered on `_ready()`, before any other autoload can query the registry.
 
 ### `.gptags` file format
 
@@ -79,7 +85,7 @@ Author your project's default tags in a `GameplayTagsList` resource — either i
 }
 ```
 
-Same JSON schema as Unity-GameplayTags-Foundation's `.gptags` runtime tag source — a tag list authored for one engine is a plain copy-paste for the other. `tags` lists only the authored dot-paths; parent segments are implied, not required. `registered` defaults to `false` if omitted (Unity's convention for inert/draft tag sets, e.g. unvetted UGC/mod content) — set it `true` for tags you actually want registered.
+Same JSON schema as Unity-GameplayTags-Foundation's `.gptags` runtime tag source. A tag list authored for one engine is a plain copy-paste for the other. `tags` lists only the authored dot-paths; parent segments are implied, not required. `registered` defaults to `false` if omitted (Unity's convention for inert/draft tag sets, e.g. unvetted UGC/mod content). Set it `true` for tags you actually want registered.
 
 ## Build
 
@@ -129,12 +135,12 @@ registry.is_descendant_of(buff, strength)    # false
 ```gdscript
 var active := GameplayTagCollection.new()
 
-# add_tag stacks — repeated calls increment the count
+# add_tag stacks: repeated calls increment the count
 active.add_tag(registry.hash("Status.Burning"))
 active.add_tag(registry.hash("Effects.Buff.Speed"))
 active.add_tag(registry.hash("Effects.Buff.Speed")) # now 2
 
-# Presence check — exact_match=false matches the tag or any descendant
+# Presence check: exact_match=false matches the tag or any descendant
 var on_fire  := active.contains(registry.hash("Status.Burning"), true)
 var any_buff := active.contains(registry.hash("Effects.Buff"), false)
 
@@ -150,8 +156,8 @@ var required := GameplayTagCollection.new()
 required.add_tag(registry.hash("Effects.Buff.Speed"))
 required.add_tag(registry.hash("Status.Frozen"))
 
-var has_all := active.contains_all(required, true) # false — Frozen absent
-var has_any := active.contains_any(required, true) # true  — Speed present
+var has_all := active.contains_all(required, true) # false, Frozen absent
+var has_any := active.contains_any(required, true) # true, Speed present
 ```
 
 ### Conditions and operations
@@ -186,7 +192,7 @@ active.subscribe(registry.hash("Effects.Buff"), func(tag, prev, next):
     print("Buff stack changed: ", prev, " -> ", next), false) # false = also fires for descendants
 ```
 
-**C#** — every type above has a matching wrapper class in `Heathen.GameplayTags` (`GameplayTagRegistry`, `GameplayTagCollection`, `GameplayTagCondition`, `GameplayTagOperation`) so C# code never touches `Engine.GetSingleton`/`Variant.Call` directly. See the `CSharp/` folder.
+**C#**: every type above has a matching wrapper class in `Heathen.GameplayTags` (`GameplayTagRegistry`, `GameplayTagCollection`, `GameplayTagCondition`, `GameplayTagOperation`) so C# code never touches `Engine.GetSingleton`/`Variant.Call` directly. See the `CSharp/` folder.
 
 ---
 
@@ -239,7 +245,7 @@ active.subscribe(registry.hash("Effects.Buff"), func(tag, prev, next):
 | `tag_name` | Dot-path of the tag to test |
 | `comparison` | See `Comparison` values below |
 | `compare_value` | RHS for numeric comparisons (ignored for `Exists`/`NotExists`, `IsMemberOf`/`IsParentOf`/`IsExactly`) |
-| `compare_tag_name` | RHS tag — dynamic value source for numeric ops, or the reference tag for identity ops |
+| `compare_tag_name` | RHS tag, a dynamic value source for numeric ops, or the reference tag for identity ops |
 | `exact_match` | `false` rolls up to the max value across the tag and its present descendants (`get_max_value_under`) |
 | `logic_op` | How this condition chains to the **next** condition: `LOGIC_AND`/`LOGIC_OR`/`LOGIC_XOR` |
 | `compare_value_type` | `VALUE_TYPE_UNSIGNED`/`VALUE_TYPE_SIGNED`/`VALUE_TYPE_DECIMAL`/`VALUE_TYPE_TAG` |
@@ -267,13 +273,13 @@ active.subscribe(registry.hash("Effects.Buff"), func(tag, prev, next):
 ## Editor tooling
 
 Enable the plugin (Project Settings > Plugins) to get:
-- **Tag-picker Inspector field** — any `tag_name`/`*_tag_name` `String` property (including `GameplayTagCondition`/`GameplayTagOperation`'s own fields) gets a searchable Tree popup instead of a raw text field, built from every `.gptags` file in the project plus whatever `GameplayTagRegistry` already knows about. `GameplayTagPickerProperty` (`editor/GameplayTagPickerProperty.gd`) is reusable by other addons directly — no compile-time dependency needed, it's a plain global `class_name`.
-- **Compact `GameplayTagCondition`/`GameplayTagOperation` editors** — one row (tag picker + comparison/arithmetic dropdown + value + exact-match toggle) instead of Godot's default multi-line block, since these are commonly embedded several-to-a-list (e.g. Ogham options).
-- **"GameplayTags" bottom-panel dock** — tag tree CRUD over every `.gptags` file in the project (add/rename/delete, registered/unregistered toggle) — the closest Godot analog to Unity's `Project Settings > Subsystems > Gameplay Tags` page (Godot has no nested-tab Project Settings equivalent; bottom panels are the native idiom instead).
+- **Tag-picker Inspector field**: any `tag_name`/`*_tag_name` `String` property (including `GameplayTagCondition`/`GameplayTagOperation`'s own fields) gets a searchable Tree popup instead of a raw text field, built from every `.gptags` file in the project plus whatever `GameplayTagRegistry` already knows about. `GameplayTagPickerProperty` is a native GDExtension class (`src/public/editor/GameplayTagPickerProperty.h`), reusable by other addons directly with no compile-time dependency needed.
+- **Compact `GameplayTagCondition`/`GameplayTagOperation` editors**: one row (tag picker, comparison/arithmetic dropdown, value, exact-match toggle) instead of Godot's default multi-line block, since these are commonly embedded several-to-a-list (e.g. Ogham options).
+- **"GameplayTags" settings panel**: a single unified tree merging every `.gptags` file in the project, with leaves colored by source addon (label and color derived from each addon's own `plugin.cfg`, so a new addon shipping tags needs no manual registration) and a per-source dim/bright toggle for colorblind-friendly comparison. Live filter/search prunes to matches and their ancestor path. Add, rename, and delete are available on your project's own Default file; tags contributed by another addon's `.gptags` file are read-only here, since a rename or delete only ever rewrites that one file's own entries, never a project-wide search-and-replace across resources or code.
 
 ## Not yet ported
 
-Unity's `NativeIntervalMap`/`NativeDescendantsMap` (Burst/Job-System-readable snapshot structures) and `GameplayTagsSubsystem` (Unity Game Framework bootstrap lifecycle) are Unity-specific internals, not API surface — the interval-encoding **algorithm** itself is ported; what's skipped is the Burst-safe snapshot/copy machinery those exist for, since Godot's GDExtension already runs the registry natively with no equivalent boundary to cross, and the engine-singleton pattern here solves the bootstrap-ordering problem `GameplayTagsSubsystem` exists for.
+Unity's `NativeIntervalMap`/`NativeDescendantsMap` (Burst/Job-System-readable snapshot structures) are Unity-specific internals, not API surface. The interval-encoding **algorithm** itself is ported; what's skipped is the Burst-safe snapshot/copy machinery those exist for, since Godot's GDExtension already runs the registry natively with no equivalent boundary to cross. `GameplayTagsSubsystem` (Unity Game Framework bootstrap lifecycle) is ported, and integrates with [Godot-Game-Framework](https://github.com/heathen-engineering/Godot-Game-Framework)'s Subsystems dock the same way every other Foundation-tier gem does.
 
 ## License
 
